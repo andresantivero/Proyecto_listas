@@ -3,6 +3,7 @@ import { AlertController, ToastController, IonicModule } from '@ionic/angular';
 import { ListaService } from '../services/lista.service';
 import { ExploreContainerComponent } from '../explore-container/explore-container.component';
 import { CommonModule } from '@angular/common';
+import { Lista } from '../models/lista.model';
 
 @Component({
   selector: 'app-tab1',
@@ -74,12 +75,44 @@ export class Tab1Page {
     toast.present();
   }
 
-  editarLista(listaItem: any) {
-    console.log("Editar lista:", listaItem);
+  editarLista(listaItem: Lista) {
+    this.EditarLista(listaItem);
   }
   
-  eliminarLista(listaItem: any) {
-    console.log("Eliminar lista:", listaItem);
+  eliminarLista(listaItem: Lista) {
+    this.listaService.eliminarLista(listaItem);
+  }
+
+  async EditarLista(lista: Lista) {
+    let alerta = await this.alertController.create({
+      header: "Editar lista",
+      inputs: [
+        {
+          type: "text",
+          name: "titulo",
+          placeholder: "Ingresar nuevo nombre de la lista",
+          value: lista.titulo
+        }
+      ],
+      buttons: [
+        {
+          text: "Cancelar",
+          role: "cancel"
+        },
+        {
+          text: "Editar",
+          handler: (data: any) => {
+            let esValido: boolean = this.validarInput(data);
+            if (esValido) {
+              lista.titulo = data.titulo,
+                this.listaService.editarLista(lista);
+              this.presentToast('Lista editada correctamente!');
+            }
+          }
+        }
+      ]
+    })
+    await alerta.present();
   }
 
 }

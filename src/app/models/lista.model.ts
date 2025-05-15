@@ -1,10 +1,12 @@
+import { Actividad } from "./actividades.model";
+
 export class Lista {
     id: number;
     titulo: string;
     creadaEn: Date;
     terminadaEn?: Date;
     completada: boolean;
-    item: any[];
+    item: Actividad[];
 
     constructor(titulo: string) {
         this.titulo = titulo;

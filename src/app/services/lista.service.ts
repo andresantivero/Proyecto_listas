@@ -1,24 +1,20 @@
 import { Injectable } from '@angular/core';
+import { Lista } from '../models/lista.model';
 
 @Injectable({
   providedIn: 'root'
 })
 
 export class ListaService {
-  public listas: any[] = [];
+  public listas: Lista[] = [];
   constructor() {
     this.cargarStorage();
   }
 
   crearLista(nombreLista: string) {
-    let ObjetoLista = { //creamos una variable de tipo array
-      id: 0,
-      titulo: nombreLista,
-      creadaEn: new Date(),
-      terminadaEn: null,
-      completada: false,
-      item: [] //Para guardar la lista de actividades
-    };
+
+    let ObjetoLista = new Lista(nombreLista);
+
     this.listas.push(ObjetoLista); //ingresamos en el array de listas el objeto con los datos creados
     this.guardarStorage();
 
@@ -40,5 +36,25 @@ export class ListaService {
       return this.listas = objLista;
     }
   }
+
+  eliminarLista(lista: Lista) {
+    let nuevoListado = this.listas.filter((listaItem) => listaItem.id !== lista.id); //Guardamos todas las listas menos lalista a eliminar
+
+    //filter devuelve un arreglo de listas
+    this.listas = nuevoListado;
+    this.guardarStorage();
+  }
+
+  editarLista(lista: Lista) {
+    let listaEditar = this.listas.find((listaItem) => listaItem.id == lista.id); //Guardamos todas las listas menos la lista a eliminar
+
+    //find devuelve el primer valor que encuentra
+    if (listaEditar) {
+      listaEditar.titulo = lista.titulo;
+    }
+
+    this.guardarStorage();
+  }
+
 
 }
